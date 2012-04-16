@@ -159,9 +159,15 @@ def page_results(request, content):
         departure = ptime.get_full_date(str(request["depart_date"]), ff(2))
         arrival = ptime.get_full_date(arrival_date, arrival_time)
 
+        def sep_number(s):
+            r = re.match(re.compile('([^\d]+)(\d+)'), s)
+            return r.group(1), r.group(2)
+
+        airline, number = sep_number(ff(5))
+
         return {
-            "number":ff(5),
-            "airline":ff(4),
+            "number":number,
+            "airline":airline, #ff(4),
             "origin":hh(1),
             "destination":hh(2),
             "departure":ptime.response_date(departure),
@@ -169,7 +175,7 @@ def page_results(request, content):
             "duration":ptime.str_timedelta(departure, arrival),
             "route_leg":int(route_leg),
             "aircraft":None,
-            "__main_airline":ff(4)
+            "__main_airline":airline, #ff(4)
         }
 
     def parse_proposal(e):
