@@ -1,0 +1,367 @@
+2012-04-10 14:42:18,547 - Aviasales Parser - WARNING - test
+2012-04-10 14:42:36,652 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/home/vit/local/tornado/aviasales/boot.py", line 179, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 148, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 130, in get
+    raise Empty
+Empty
+
+2012-04-10 14:42:36,654 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 14:43:39,368 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/home/vit/local/tornado/aviasales/boot.py", line 179, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 148, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 130, in get
+    raise Empty
+Empty
+
+2012-04-10 14:43:39,368 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 14:43:54,432 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/home/vit/local/tornado/aviasales/boot.py", line 179, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 148, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 130, in get
+    raise Empty
+Empty
+
+2012-04-10 14:43:54,433 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 14:50:25,290 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/home/vit/local/tornado/aviasales/boot.py", line 177, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 148, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 130, in get
+    raise Empty
+Empty
+
+2012-04-10 14:50:25,328 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 15:11:59,179 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 15:12:03,972 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 15:21:38,315 - Aviasales Parser - ERROR - Error Response Formatting! variable "response" does not match the specified type "list"
+2012-04-10 15:21:38,316 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 15:23:29,567 - Aviasales Parser - ERROR - Error Response Formatting! variable "response" does not match the specified type "list"
+2012-04-10 15:23:29,568 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 15:26:14,763 - Aviasales Parser - ERROR - Error Response Formatting! variable "response" does not match the specified type "list"
+2012-04-10 15:26:14,764 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 15:29:10,871 - Aviasales Parser - ERROR - Error Response Formatting! variable "response" does not match the specified type "list"
+2012-04-10 15:29:10,873 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 15:30:22,420 - Aviasales Parser - ERROR - Error Response Formatting! variable "response" does not match the specified type "list"
+2012-04-10 15:30:22,421 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 19:17:29,800 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/home/vit/local/tornado/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 148, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.7/multiprocessing/queues.py", line 130, in get
+    raise Empty
+Empty
+
+2012-04-10 19:17:29,830 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 19:36:07,804 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 174, in run_parse
+    parser = import_parser_by_host(host_name)
+  File "/var/www/vit/aviasales/boot.py", line 158, in import_parser_by_host
+    return import_module(PARSER_DIR + "." + parser_name)
+  File "/var/www/vit/aviasales/my_importlib.py", line 37, in import_module
+    __import__(name)
+  File "/var/www/vit/aviasales/avsl_parsers/webjet_com_au.py", line 16, in <module>
+    from grab import Grab
+ImportError: No module named grab
+No module named grab
+2012-04-10 19:36:07,804 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! no module named grab
+2012-04-10 19:40:10,693 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-10 19:40:10,694 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 19:40:39,731 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-10 19:40:39,731 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 19:42:57,198 - Aviasales Parser - ERROR - Error Response Formatting For "webjet.com.au"! variable "response" does not match the specified type "list"
+2012-04-10 19:42:57,199 - Aviasales Parser - ERROR - Internal Server Error: Invalid parser response format
+2012-04-10 19:54:42,511 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-10 19:54:42,512 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 21:20:06,894 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-10 21:20:06,894 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-10 22:33:15,125 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-10 22:33:15,126 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-11 10:36:26,772 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 178, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-11 10:36:26,773 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-11 10:39:06,501 - Aviasales Parser - CRITICAL - Unavailable Host _webjet.com.au
+2012-04-11 10:40:17,140 - Aviasales Parser - CRITICAL - Unavailable Host _webjet.com.au
+2012-04-11 10:41:39,509 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 169, in run_parse
+    raise ValueError("Unavailable Host " + host_name)
+ValueError: Unavailable Host _webjet.com.au
+Unavailable Host _webjet.com.au
+2012-04-11 10:41:39,509 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! unavailable host _webjet.com.au
+2012-04-11 10:42:08,760 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 177, in run_parse
+    response = queue.get_nowait()
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 122, in get_nowait
+    return self.get(False)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 104, in get
+    raise Empty
+Empty
+
+2012-04-11 10:42:08,761 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! 
+2012-04-11 10:56:16,877 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 10:56:16,878 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 10:59:02,345 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 10:59:02,346 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:03:23,849 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:03:23,850 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:05:22,609 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:05:22,610 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:07:27,756 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:07:27,757 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:10:57,838 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:10:57,839 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:19:12,749 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 184, in run_parse
+    raise ParserError("Runtime Parser Error")
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:19:12,750 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:41:04,797 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:41:04,798 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:44:21,353 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:44:21,354 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:52:53,865 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:52:53,865 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:58:44,340 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:58:44,340 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 11:59:23,137 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-11 11:59:23,137 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! runtime parser error
+2012-04-11 12:01:04,950 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Has Been A Changes in Airline Service
+Has Been A Changes in Airline Service
+2012-04-11 12:01:04,951 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! has been a changes in airline service
+2012-04-11 12:03:50,436 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Has Been A Changes in Airline Service
+Has Been A Changes in Airline Service
+2012-04-11 12:03:50,437 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! has been a changes in airline service
+2012-04-11 12:05:27,463 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Airline server is not responding
+Airline server is not responding
+2012-04-11 12:05:27,464 - Aviasales Parser - ERROR - Internal Server Error: Server cannot run the parser! airline server is not responding
+2012-04-11 12:06:46,889 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Airline server is not responding
+Airline server is not responding
+2012-04-11 12:06:46,889 - Aviasales Parser - ERROR - Internal Server Error: Airline server is not responding
+2012-04-11 12:08:23,563 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Airline server is not responding
+Airline server is not responding
+2012-04-11 12:08:23,563 - Aviasales Parser - ERROR - Internal Server Error: Airline server is not responding
+2012-04-11 12:08:36,952 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Airline server is not responding
+Airline server is not responding
+2012-04-11 12:08:36,952 - Aviasales Parser - ERROR - Internal Server Error: Airline server is not responding
+2012-04-11 12:09:07,025 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Airline server is not responding
+Airline server is not responding
+2012-04-11 12:09:07,025 - Aviasales Parser - ERROR - Internal Server Error: Airline server is not responding
+2012-04-11 12:09:18,784 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 189, in run_parse
+    raise ParserError(response.get('response', error_message))
+ParserError: Airline server is not responding
+Airline server is not responding
+2012-04-11 12:09:18,785 - Aviasales Parser - ERROR - Internal Server Error: Airline server is not responding
+2012-04-12 12:19:11,147 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 193, in run_parse
+    flags = response.get('flags', False)
+AttributeError: 'list' object has no attribute 'get'
+'list' object has no attribute 'get'
+2012-04-12 12:19:11,148 - Aviasales Parser - ERROR - Internal Server Error: 'list' object has no attribute 'get'
+2012-04-12 12:33:51,294 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 200, in run_parse
+    results = filter(lambda value: min_value <= value['total'] <= max_value, results)
+  File "/var/www/vit/aviasales/boot.py", line 200, in <lambda>
+    results = filter(lambda value: min_value <= value['total'] <= max_value, results)
+NameError: free variable 'min_value' referenced before assignment in enclosing scope
+free variable 'min_value' referenced before assignment in enclosing scope
+2012-04-12 12:33:51,295 - Aviasales Parser - ERROR - Internal Server Error: Free variable 'min_value' referenced before assignment in enclosing scope
+2012-04-12 15:53:14,653 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-12 15:53:14,654 - Aviasales Parser - ERROR - Internal Server Error: Runtime parser error
+2012-04-12 15:55:32,517 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 186, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-12 15:55:32,518 - Aviasales Parser - ERROR - Internal Server Error: Runtime parser error
+2012-04-12 15:57:16,982 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 187, in run_parse
+    raise ParserError(error_message)
+ParserError: Runtime Parser Error
+Runtime Parser Error
+2012-04-12 15:57:16,983 - Aviasales Parser - ERROR - Internal Server Error: Runtime parser error
+2012-04-13 12:21:20,745 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 185, in run_parse
+    if response.get('response', False) is False:
+AttributeError: 'bool' object has no attribute 'get'
+'bool' object has no attribute 'get'
+2012-04-13 12:21:20,759 - Aviasales Parser - ERROR - Internal Server Error: 'bool' object has no attribute 'get'
+2012-04-13 12:40:43,348 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 185, in run_parse
+    if response.get('response', False) is False:
+AttributeError: 'bool' object has no attribute 'get'
+'bool' object has no attribute 'get'
+2012-04-13 12:40:43,349 - Aviasales Parser - ERROR - Internal Server Error: 'bool' object has no attribute 'get'
+2012-04-13 12:41:17,926 - Aviasales Parser - CRITICAL - 
+Traceback (most recent call last):
+  File "/var/www/vit/aviasales/boot.py", line 185, in run_parse
+    if response.get('response', False) is False:
+AttributeError: 'bool' object has no attribute 'get'
+'bool' object has no attribute 'get'
+2012-04-13 12:41:17,926 - Aviasales Parser - ERROR - Internal Server Error: 'bool' object has no attribute 'get'
