@@ -172,7 +172,7 @@ def page_results(request, content):
             "destination":hh(2),
             "departure":ptime.response_date(departure),
             "arrival":ptime.response_date(arrival),
-            "duration":ptime.str_timedelta(departure, arrival),
+            "duration":None, #ptime.str_timedelta(departure, arrival),
             "route_leg":int(route_leg),
             "aircraft":None,
             "__main_airline":airline, #ff(4)

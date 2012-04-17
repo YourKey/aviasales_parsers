@@ -85,17 +85,26 @@ def successful_xml_response(response):
     Преобразует словарь или массив в xml
     Возвращает ответ сервера в виде строки в формате xml
     '''
+
     if not response:
         # Nothing Found Response
         body = '<search_result />\n'
     else:
+
+        def attr_list(names):
+            return ' '.join(map(lambda name: '{0}="%({0})s"'.format(name), names))
+
+        proposal_attributes = ["main_airline","total","currency"]
+        flight_attributes = ["number", "airline", "origin", "destination", "departure",
+                             "arrival", "duration", "route_leg", "aircraft"]
+
         proposals = []
         for x in response:
-            proposal = '<proposals main_airline="%(main_airline)s" total="%(total)s" currency="%(currency)s" id="uniq_proposal_id">\n' % x
+            x_attributes = filter(lambda f: x.get(f, False), proposal_attributes)
+            proposal = ('<proposals ' + attr_list(x_attributes) + ' id="uniq_proposal_id">\n') % x
             for z in x['flights']:
-                proposal += '<flights number="%(number)s" airline="%(airline)s" origin="%(origin)s" ' \
-                            'destination="%(destination)s" departure="%(departure)s" arrival="%(arrival)s" ' \
-                            'duration="%(duration)s" route_leg="%(route_leg)s" aircraft="%(aircraft)s" />\n' % z
+                z_attributes = filter(lambda f: z.get(f, False), flight_attributes)
+                proposal += ('<flights ' + attr_list(z_attributes) + ' />\n') % z
             proposal += '</proposals>'
             proposals.append(proposal)
         body = '<search_result>\n' + '\n'.join(proposals) + '</search_result>'
