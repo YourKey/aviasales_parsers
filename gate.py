@@ -76,10 +76,9 @@ class ProposalsHandler(BaseHandler):
                 # сервер не может запустить парсер
                 return self.error_response(500, str(obj))
 
-            # временная мера
-            #if not boot.check_response(host_name, obj):
+            if not boot.check_response(host_name, obj):
                 # записываем сообщение об ошибке в логи и возвращаем в теле ответа
-            #    return self.error_response(500, "Invalid parser response format")
+                return self.error_response(500, "Invalid parser response format")
 
             try:
                 # формируем xml ответ
