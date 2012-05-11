@@ -3,10 +3,9 @@
 # -*- coding: utf-8 -*-
 
 import sys, os
+import utils
 
 sys.path.append(os.path.abspath(".."))
-
-import utils
 
 # перенаправляем стандартный вывод в лог файл
 utils.redirect_stdout('webjet.com.au')

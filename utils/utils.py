@@ -8,9 +8,11 @@ import subprocess
 PARSER_LOG_DIRECTORY = 'logs/parsers'
 
 def redirect_stdout(host_name):
-    dir = PARSER_LOG_DIRECTORY + '/' + host_name
+    dir = os.path.abspath(PARSER_LOG_DIRECTORY) + '/' + host_name
     if not os.path.exists(dir):
         os.makedirs(dir)
+
+    sys.stderr = open(dir + '/' + str(datetime.datetime.now().date()) + ".log", "at")
     sys.stdout = open(dir + '/' + str(datetime.datetime.now().date()) + ".log", "at")
 
 def run_php_script(path_to_script, request):

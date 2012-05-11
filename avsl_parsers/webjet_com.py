@@ -10,16 +10,25 @@ import datetime
 
 import time, urllib
 
-script_path = os.path.realpath(__file__)
-sys.path.append(os.path.normpath(os.path.dirname(script_path) + "/../utils"))
+if __name__ == "__main__":
+    script_path = os.path.realpath(__file__)
+    sys.path.append(os.path.normpath(os.path.dirname(script_path) + "/../utils"))
+    import utils
+    import ptime
+else:
+    from utils import utils
+    from utils import ptime
 
-import ptime
+# перенаправляем стандартный вывод в лог файл
+utils.redirect_stdout('webjet.com')
+
 
 def parse(queue):
+    print "start.."
     request = queue.get()
     response = page_results(request, search_results_content(request))
     queue.put({ 'success': True, 'flags':[], 'response':response })
-    pass
+    print "finish..."
 
 def search_results_content(request):
 
@@ -29,7 +38,7 @@ def search_results_content(request):
     request["depart_date"] = request["depart_date"].replace('-', '/')
     request["return_date"] = request["return_date"].replace('-', '/')
 
-    g.setup(post={
+    g.setup(post = {
         'EntryPoint':	'Flight',
         'RequestFrom':	'Outside',
         'TripType':	'rdbRoundTrip',
@@ -50,7 +59,7 @@ def search_results_content(request):
         'txtdate2':request["return_date"],
     })
 
-    g.setup(user_agent="User-Agent	Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
+    g.setup(user_agent = "User-Agent	Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
     g.go("http://res.webjet.com/process.aspx?agentid=189&" +
          "txtDepCity1=" + request['destination_iata'] +
          "&txtArrCity1=" + request['origin_iata'] +
@@ -66,6 +75,11 @@ def search_results_content(request):
 
     if not g.response.cookies.get("ASP.NET_SessionId", False):
         print "not auth"
+        sys.exit(0)
+
+    loc = g.response.headers.get("Location")
+    if not loc or loc.find("result=nothing") >= 0:
+        print "not results"
         sys.exit(0)
 
     g.setup(referer = "http://www.webjet.com/flights/")
@@ -105,11 +119,11 @@ def search_results_content(request):
             "__ASYNCPOST": "true"
         })
         g.go("http://res.webjet.com" + loc)
-        pat = re.compile('pageRedirect')
-        if i==9 or re.search(pat, g.response.body):
+        if i == 9 or re.search(re.compile('pageRedirect'), g.response.body):
             status = True
             break
         time.sleep(1)
+        i += 1
 
     if not status:
         return False
@@ -117,7 +131,7 @@ def search_results_content(request):
     g.setup(user_agent="User-Agent	Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
     g.go("http://res.webjet.com/prices.aspx?page=flightprices&air=Air&id1=" + urllib.quote(id1, ''))
 
-    print len(g.response.body)
+    print "Response Body Length: ", len(g.response.body)
 
     return g.response.body
 
@@ -160,7 +174,7 @@ def page_results(request, content):
         arrival = ptime.get_full_date(arrival_date, arrival_time)
 
         def sep_number(s):
-            r = re.match(re.compile('([^\d]+)(\d+)'), s)
+            r = re.match(re.compile('([\w\d][\w\d])(\d+)'), str(s))
             return r.group(1), r.group(2)
 
         airline, number = sep_number(ff(5))
@@ -200,22 +214,22 @@ def page_results(request, content):
 
 
 def main():
+
     request = {
        "origin_iata":'SYD',
-       "destination_iata":'Los Angeles',
-       "depart_date":'2012-04-26',
-       "return_date":'2012-04-29',
+       "destination_iata":'BKK',
+       "depart_date":'2012-05-26',
+       "return_date":'2012-05-29',
        "adults":'1',
        "children":'0',
        "infants":'0',
        "trip_class":'ECONOMY',
        "range":None
-   }
+    }
 
     content = search_results_content(request)
 
     response = page_results(request, content)
-    print response
 
 if __name__ == "__main__":
     main()

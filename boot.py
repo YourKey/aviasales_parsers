@@ -80,6 +80,23 @@ def failed_xml_response(error_message):
     '''
     return '<?xml version="1.0"?>\n<search_result error_message="%s" />' % (error_message, )
 
+def click_xml_response(url_info):
+
+    result = '<?xml version="1.0"?>\n<click>'
+    result+= '\n<http_method>{method}</http_method>'.replace('{method}', url_info['method'])
+    result+= '\n<url>{url}</url>'.replace('{url}', url_info['url'])
+    if len(url_info["params"]) > 0:
+        result+= '\n<request_params>'
+        params = url_info["params"]
+        for k in params:
+            result+= '<param name="{name}" value="{value}" />'
+            result = result.replace('{name}', k)
+            result = result.replace('{value}', params[k])
+        result+= '\n</request_params>'
+    result+= '\n</click>'
+
+    return result
+
 def successful_xml_response(response):
     '''
     Преобразует словарь или массив в xml
@@ -94,14 +111,14 @@ def successful_xml_response(response):
         def attr_list(names):
             return ' '.join(map(lambda name: '{0}="%({0})s"'.format(name), names))
 
-        proposal_attributes = ["main_airline","total","currency"]
+        proposal_attributes = ["main_airline","total","currency","id"]
         flight_attributes = ["number", "airline", "origin", "destination", "departure",
                              "arrival", "duration", "route_leg", "aircraft"]
 
         proposals = []
         for x in response:
             x_attributes = filter(lambda f: x.get(f, False), proposal_attributes)
-            proposal = ('<proposals ' + attr_list(x_attributes) + ' id="uniq_proposal_id">\n') % x
+            proposal = ('<proposals ' + attr_list(x_attributes) + '>\n') % x
             for z in x['flights']:
                 z_attributes = filter(lambda f: z.get(f, False), flight_attributes)
                 proposal += ('<flights ' + attr_list(z_attributes) + ' />\n') % z

@@ -26,6 +26,8 @@ define("port", default=8888, help="run on the given port", type=int)
 
 import httplib
 import boot
+import hash
+import click
 
 class BaseHandler(tornado.web.RequestHandler):
     def error_response(self, status_code, message):
@@ -34,78 +36,104 @@ class BaseHandler(tornado.web.RequestHandler):
         boot.logger.error(error_message)
         self.write(boot.failed_xml_response(error_message))
 
+class WebDriverHandler(BaseHandler):
+    def get(self):
+        self.write("WebDriverHandler")
+
 class MainHandler(BaseHandler):
     def get(self):
         self.write("Hello, world")
 
 class ProposalsHandler(BaseHandler):
+
+    def get_list(self):
+        hostname = self.get_argument('host')
+
+        request = {
+            "origin_iata":None,
+            "destination_iata":None,
+            "depart_date":None,
+            "return_date":None,
+            "adults":None,
+            "children":None,
+            "infants":None,
+            "trip_class":None,
+            "range":None
+        }
+
+        for key in request.keys():
+            request[key] = self.get_argument(key)
+
+        response, obj = boot.run_parse(hostname, request)
+        if not response:
+            # сервер не может запустить парсер
+            return self.error_response(500, str(obj))
+
+        if not boot.check_response(hostname, obj):
+            # записываем сообщение об ошибке в логи и возвращаем в теле ответа
+            return self.error_response(500, "Invalid parser response format")
+
+        try:
+            # производим хеширование успешного ответа
+            hashable_list = []
+            for i, v in enumerate(obj):
+                hashable = dict()
+                hashable["hostname"] = hostname
+                hashable["request"] = request
+                hashable["proposal"] = obj[i].copy()
+                hashable["index"] = i
+                hashable_list.append(hashable)
+            print hashable_list
+            ids = hash.set_each('avsl_proposals', hashable_list)
+
+            if not ids:
+                raise hash.WriteException('hashing failed - key list is empty')
+
+            for i, v in enumerate(obj):
+                obj[i]['id'] = ids[i]
+
+            # формируем xml ответ
+            response = boot.successful_xml_response(obj)
+        except hash.WriteException, e:
+            self.error_response(500, 'Ошибка записи данных в хеш! ' + str(e))
+            return
+        except Exception, e:
+            # ошибка формирования успешного xml ответа
+            self.error_response(500, 'Error the formation of a successful response xml! ' + str(e))
+            return
+        else:
+            # выводим в теле ответ и пишем в лог об успешном парсинге
+            boot.logger.info('Successful Response For "%s" Host (Content-Length: %d)' % (hostname, len(response)))
+            self.write(response)
+
+    def get_issue(self, proposal_id):
+        origin = hash.get('avsl_proposals', proposal_id)
+        if not origin:
+            self.error_response(404, "proposal by id #%d not found" % int(proposal_id))
+            return
+
+        obj = hash.decode_dict(origin)
+        info = click.url_info(obj["hostname"], obj)
+
+        if not info:
+            self.error_response(404, "domain %s cannot generate click url" % obj["hostname"])
+            return
+
+        self.write(boot.click_xml_response(info))
+
     def get(self, proposal_id=None):
         self.set_header("Content-Type", "text/xml")
         if proposal_id is None:
-            host_name = self.get_argument('host')
-
-            request = {
-                "origin_iata":None,
-                "destination_iata":None,
-                "depart_date":None,
-                "return_date":None,
-                "adults":None,
-                "children":None,
-                "infants":None,
-                "trip_class":None,
-                "range":None
-            }
-
-        #    request = {
-        #        "origin_iata":'SYD',
-        #        "destination_iata":'Los Angeles',
-        #        "depart_date":'2012-04-26',
-        #        "return_date":'2012-04-29',
-        #        "adults":'1',
-        #        "children":'0',
-        #        "infants":'0',
-        #        "trip_class":'ECONOMY',
-        #        "range":None
-        #    }
-
-            for key in request.keys():
-                request[key] = self.get_argument(key)
-
-            response, obj = boot.run_parse(host_name, request)
-            if not response:
-                # сервер не может запустить парсер
-                return self.error_response(500, str(obj))
-
-            if not boot.check_response(host_name, obj):
-                # записываем сообщение об ошибке в логи и возвращаем в теле ответа
-                return self.error_response(500, "Invalid parser response format")
-
-            try:
-                # формируем xml ответ
-                response = boot.successful_xml_response(obj)
-            except Exception, e:
-                # ошибка формирования успешного xml ответа
-                self.error_response(500, 'Error is the formation of a successful response xml! ' + str(e))
-            else:
-                # выводим в теле ответ и пишем в лог об успешном парсинге
-                boot.logger.info('Successful Response For "%s" Host (Content-Length: %d)' % (host_name, len(response)))
-                self.write(response)
-
+            self.get_list()
         else:
-            print("/proposals/:proposal_id.xml\n")
-
-class RunTestHandler(BaseHandler):
-    def get(self):
-        if boot.run_parse(self.get_argument('h'), {}) is False:
-            self.write("FAILED EXECUTION!!!")
-        self.write('DONE')
+            self.get_issue(proposal_id)
 
 def main():
     tornado.options.parse_command_line()
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r"/proposals\/?\.xml", ProposalsHandler),
-        (r"/proposals/([0-9]+)\/?\.xml", ProposalsHandler),
+        (r"/proposals/(\d+)\/?\.xml", ProposalsHandler),
     ])
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(options.port)
