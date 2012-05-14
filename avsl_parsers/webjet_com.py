@@ -140,6 +140,8 @@ def page_results(request, content):
     g =  Grab()
     g.response.body = content
 
+    print "start parsing..."
+
     # Example: <li><strong>Departure Time</strong> - 8:55 PM</li>
     flight_field_pattern = re.compile('<li><strong>[^<]+</strong> - ([^<]+)</li>')
     # Example: Sydney, Nsw (SYD) to Kuala Lumpur (KUL) May 8, 2012
@@ -150,6 +152,8 @@ def page_results(request, content):
     # operation_airline = main airline, airline = airline
 
     def parse_flight(e, route_leg):
+        print "start parse flights..."
+
         g = Grab()
         g.response.body = etree.tostring(e)
 
@@ -161,7 +165,7 @@ def page_results(request, content):
         def hh(index):
             return h.group(index)
 
-        arrival_pattern_plus_day = re.compile('(\d+:\d+ AM) \\+ (\d+) Day')
+        arrival_pattern_plus_day = re.compile('(\d+:\d+ [AP]M) \\+ (\d+) Day')
 
         arrival_time = ff(3)
         arrival_date = ptime.get_date(request["depart_date"])
@@ -169,6 +173,9 @@ def page_results(request, content):
         if arrival_plus_day:
             arrival_time = arrival_plus_day.group(1)
             arrival_date += datetime.timedelta(days = int(arrival_plus_day.group(2)))
+
+        print "arrival"
+        print arrival_date, arrival_time
 
         departure = ptime.get_full_date(str(request["depart_date"]), ff(2))
         arrival = ptime.get_full_date(arrival_date, arrival_time)
@@ -193,6 +200,7 @@ def page_results(request, content):
         }
 
     def parse_proposal(e):
+        print "start parse proposals"
         g = Grab()
         g.response.body = etree.tostring(e)
         flights = []
@@ -209,6 +217,9 @@ def page_results(request, content):
         }
 
     results = map(parse_proposal, g.css_list('.result-list>li'))
+
+    print "parsing results"
+    print results
 
     return results
 

@@ -7,7 +7,7 @@ __author__ = 'vit'
 
 import boot
 
-AVAILABLE_HOSTS = ["airasia.com",""]
+AVAILABLE_HOSTS = ["airasia.com","webjet.com","tigerairways.com","cebupacificair.com"]
 
 PARAMS = {
     "webjet.com": {

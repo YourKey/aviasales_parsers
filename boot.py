@@ -206,6 +206,9 @@ def run_parse(host_name, request):
         finally:
             error_message = "Runtime Parser Error"
 
+            if not response:
+                return True, []
+
             if response.get('response', False) is False:
                 raise ParserError(error_message)
 

@@ -36,10 +36,6 @@ class BaseHandler(tornado.web.RequestHandler):
         boot.logger.error(error_message)
         self.write(boot.failed_xml_response(error_message))
 
-class WebDriverHandler(BaseHandler):
-    def get(self):
-        self.write("WebDriverHandler")
-
 class MainHandler(BaseHandler):
     def get(self):
         self.write("Hello, world")
@@ -72,6 +68,11 @@ class ProposalsHandler(BaseHandler):
         if not boot.check_response(hostname, obj):
             # записываем сообщение об ошибке в логи и возвращаем в теле ответа
             return self.error_response(500, "Invalid parser response format")
+
+        if not obj or len(obj) == 0:
+            # выдаем 400 bad request если нет выходных данных
+            self.error_response(400, 'No result available try another search...')
+            return
 
         try:
             # производим хеширование успешного ответа
