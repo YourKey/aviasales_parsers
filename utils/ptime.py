@@ -22,3 +22,8 @@ def str_timedelta(b, e):
     b = datetime.datetime.strptime(b, '%Y-%m-%d %H:%M:%S') if type(b) == str else b
     e = datetime.datetime.strptime(e, '%Y-%m-%d %H:%M:%S') if type(e) == str else e
     return (e-b).seconds
+
+def input2mdY(date):
+    date = datetime.datetime.strptime(date, '%Y-%m-%d')
+    return date.strftime("%m/%d/%Y")
+

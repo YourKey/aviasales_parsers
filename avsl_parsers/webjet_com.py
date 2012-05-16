@@ -35,43 +35,80 @@ def search_results_content(request):
     g = Grab(reuse_cookies = True, reuse_referer=True)
 
     request = request.copy()
-    request["depart_date"] = request["depart_date"].replace('-', '/')
-    request["return_date"] = request["return_date"].replace('-', '/')
+
+    request["depart_date"] = ptime.input2mdY(request["depart_date"])
+    request["return_date"] = ptime.input2mdY(request["return_date"])
+
+    print("POST http://res.webjet.com/process.aspx?agentid=189&" +
+         "txtDepCity1=" + request['origin_iata'] +
+         "&txtArrCity1=" + request['destination_iata'] +
+         "&TripType=rdbRoundTrip" +
+         "&txtDate1=" + request["depart_date"] +
+         "&txtDate2=" + request["return_date"] +
+         "&txtDepCity2=" + request['destination_iata'] +
+         "&txtArrCity2=" + request['origin_iata'] +
+         "&ddlPaxADT=" + request['adults'] +
+         "&ddlPaxCHD=" + request['children'] +
+         "&ddlPaxINF=" + request['infants'])
+
+    print "DATA ", {
+        'EntryPoint':	'Flight',
+        'RequestFrom':	'Outside',
+        'TripType':	'rdbRoundTrip',
+        'WebSiteId':	'189',
+        'arrival_label':	request['destination_iata'],
+        'btnSubmitAir':	'Search for flights',
+        'ddlCabin':	'Y',
+        'ddlPaxADT':	request['adults'],
+        'ddlPaxCHD':	request['children'],
+        'ddlPaxINF':	request['infants'],
+        'departure_label':	request['origin_iata'],
+        'flight_search_action':	'http://res.webjet.com/process.aspx',
+        'txtArrCity1':	request['destination_iata'],
+        'txtArrCity2':	request['origin_iata'],
+        'txtDepCity1':	request['origin_iata'],
+        'txtDepCity2':	request['destination_iata'],
+        'txtdate1': request["depart_date"],
+        'txtdate2': request["return_date"]
+    }
 
     g.setup(post = {
         'EntryPoint':	'Flight',
         'RequestFrom':	'Outside',
         'TripType':	'rdbRoundTrip',
         'WebSiteId':	'189',
-        'arrival_label':	request['origin_iata'],
+        'arrival_label':	request['destination_iata'],
         'btnSubmitAir':	'Search for flights',
         'ddlCabin':	'Y',
         'ddlPaxADT':	request['adults'],
         'ddlPaxCHD':	request['children'],
         'ddlPaxINF':	request['infants'],
-        'departure_label':	request['destination_iata'],
+        'departure_label':	request['origin_iata'],
         'flight_search_action':	'http://res.webjet.com/process.aspx',
-        'txtArrCity1':	request['origin_iata'],
-        'txtArrCity2':	request['destination_iata'],
-        'txtDepCity1':	request['destination_iata'],
-        'txtDepCity2':	request['origin_iata'],
-        'txtdate1':request["depart_date"],
-        'txtdate2':request["return_date"],
+        'txtArrCity1':	request['destination_iata'],
+        'txtArrCity2':	request['origin_iata'],
+        'txtDepCity1':	request['origin_iata'],
+        'txtDepCity2':	request['destination_iata'],
+        'txtdate1': request["depart_date"],
+        'txtdate2': request["return_date"]
     })
 
     g.setup(user_agent = "User-Agent	Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
     g.go("http://res.webjet.com/process.aspx?agentid=189&" +
-         "txtDepCity1=" + request['destination_iata'] +
-         "&txtArrCity1=" + request['origin_iata'] +
+         "txtDepCity1=" + request['origin_iata'] +
+         "&txtArrCity1=" + request['destination_iata'] +
          "&TripType=rdbRoundTrip" +
-         "&txtDate1=" + urllib.quote(request["depart_date"], '') +
-         "&txtDate2=" + urllib.quote(request["return_date"], '') +
-         "&txtDepCity2=" + request['origin_iata'] +
-         "&txtArrCity2=" + request['destination_iata'] +
+         "&txtDate1=" + request["depart_date"] +
+         "&txtDate2=" + request["return_date"] +
+         "&txtDepCity2=" + request['destination_iata'] +
+         "&txtArrCity2=" + request['origin_iata'] +
          "&ddlPaxADT=" + request['adults'] +
          "&ddlPaxCHD=" + request['children'] +
          "&ddlPaxINF=" + request['infants']
     )
+
+
+    print "request", request
 
     if not g.response.cookies.get("ASP.NET_SessionId", False):
         print "not auth"
@@ -103,25 +140,48 @@ def search_results_content(request):
 
     print _vs.strip(), _dc.strip(), _oc.strip()
 
+
+
+#    print loc
+#
+#    print {
+#        "scp": "updServer|timeControl",
+#        "Destination_airport": "bkk/", #request["destination_iata"].upper() + "/",
+#        "Destination_country": "TH/", #_dc,
+#        "Origin_airport":  "syd/", #request["origin_iata"].upper() + "/",
+#        "Origin_country": "AU", #_oc,
+#        "Departure_date": request["depart_date"] + "/",
+#        "__EVENTTARGET": "timeControl",
+#        "__EVENTARGUMENT": "",
+#        "__VIEWSTATE": _vs,
+#        "__ASYNCPOST": "true"
+#    }
+
     i=0
     status = False
+
     while True:
         g.setup(post= {
             "scp": "updServer|timeControl",
-            "Destination_airport": request["destination_iata"].upper() + "/",
-            "Destination_country": _dc + "/",
-            "Origin_airport":  request["origin_iata"].upper() + "/",
-            "Origin_country": _oc + "/",
-            "Departure_date": request["depart_date"],
+            "Destination_airport": "bkk/", #request["destination_iata"].upper() + "/",
+            "Destination_country": "TH/", #_dc,
+            "Origin_airport":  "syd/", #request["origin_iata"].upper() + "/",
+            "Origin_country": "AU", #_oc,
+            "Departure_date": request["depart_date"] + "/",
             "__EVENTTARGET": "timeControl",
             "__EVENTARGUMENT": "",
             "__VIEWSTATE": _vs,
             "__ASYNCPOST": "true"
         })
         g.go("http://res.webjet.com" + loc)
-        if i == 9 or re.search(re.compile('pageRedirect'), g.response.body):
+
+        if i == 9:
+            break
+
+        if re.search(re.compile('pageRedirect'), g.response.body):
             status = True
             break
+
         time.sleep(1)
         i += 1
 
@@ -132,6 +192,10 @@ def search_results_content(request):
     g.go("http://res.webjet.com/prices.aspx?page=flightprices&air=Air&id1=" + urllib.quote(id1, ''))
 
     print "Response Body Length: ", len(g.response.body)
+
+    #print "~~~~~~~~~~~~~~~~~~~~~~~~"
+    #print g.response.body
+    #print "~~~~~~~~~~~~~~~~~~~~~~~~"
 
     return g.response.body
 
@@ -165,7 +229,7 @@ def page_results(request, content):
         def hh(index):
             return h.group(index)
 
-        arrival_pattern_plus_day = re.compile('(\d+:\d+ [AP]M) \\+ (\d+) Day')
+        arrival_pattern_plus_day = re.compile('(\d+:\d+ [AP]M) \\+ (\d+) [dD]ay')
 
         arrival_time = ff(3)
         arrival_date = ptime.get_date(request["depart_date"])
@@ -211,10 +275,12 @@ def page_results(request, content):
 
         return {
             "total":re.search(total_propasal_price,etree.tostring(g.css('#paxAdtTd').find('..'))).group(1),
-            "currency":"USD",
+            "currency":"AUD",
             "main_airline":None if not flights else flights[0]["__main_airline"],
             "flights": flights
         }
+
+    print g.css_list('.result-list>li')
 
     results = map(parse_proposal, g.css_list('.result-list>li'))
 
