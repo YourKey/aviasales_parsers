@@ -84,7 +84,7 @@ class ProposalsHandler(BaseHandler):
                 hashable["proposal"] = obj[i].copy()
                 hashable["index"] = i
                 hashable_list.append(hashable)
-            print hashable_list
+
             ids = hash.set_each('avsl_proposals', hashable_list)
 
             if not ids:

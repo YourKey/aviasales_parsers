@@ -39,39 +39,6 @@ def search_results_content(request):
     request["depart_date"] = ptime.input2mdY(request["depart_date"])
     request["return_date"] = ptime.input2mdY(request["return_date"])
 
-    print("POST http://res.webjet.com/process.aspx?agentid=189&" +
-         "txtDepCity1=" + request['origin_iata'] +
-         "&txtArrCity1=" + request['destination_iata'] +
-         "&TripType=rdbRoundTrip" +
-         "&txtDate1=" + request["depart_date"] +
-         "&txtDate2=" + request["return_date"] +
-         "&txtDepCity2=" + request['destination_iata'] +
-         "&txtArrCity2=" + request['origin_iata'] +
-         "&ddlPaxADT=" + request['adults'] +
-         "&ddlPaxCHD=" + request['children'] +
-         "&ddlPaxINF=" + request['infants'])
-
-    print "DATA ", {
-        'EntryPoint':	'Flight',
-        'RequestFrom':	'Outside',
-        'TripType':	'rdbRoundTrip',
-        'WebSiteId':	'189',
-        'arrival_label':	request['destination_iata'],
-        'btnSubmitAir':	'Search for flights',
-        'ddlCabin':	'Y',
-        'ddlPaxADT':	request['adults'],
-        'ddlPaxCHD':	request['children'],
-        'ddlPaxINF':	request['infants'],
-        'departure_label':	request['origin_iata'],
-        'flight_search_action':	'http://res.webjet.com/process.aspx',
-        'txtArrCity1':	request['destination_iata'],
-        'txtArrCity2':	request['origin_iata'],
-        'txtDepCity1':	request['origin_iata'],
-        'txtDepCity2':	request['destination_iata'],
-        'txtdate1': request["depart_date"],
-        'txtdate2': request["return_date"]
-    }
-
     g.setup(post = {
         'EntryPoint':	'Flight',
         'RequestFrom':	'Outside',
@@ -81,7 +48,7 @@ def search_results_content(request):
         'btnSubmitAir':	'Search for flights',
         'ddlCabin':	'Y',
         'ddlPaxADT':	request['adults'],
-        'ddlPaxCHD':	request['children'],
+         'ddlPaxCHD':	request['children'],
         'ddlPaxINF':	request['infants'],
         'departure_label':	request['origin_iata'],
         'flight_search_action':	'http://res.webjet.com/process.aspx',
@@ -93,7 +60,7 @@ def search_results_content(request):
         'txtdate2': request["return_date"]
     })
 
-    g.setup(user_agent = "User-Agent	Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
+    g.setup(user_agent = "Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
     g.go("http://res.webjet.com/process.aspx?agentid=189&" +
          "txtDepCity1=" + request['origin_iata'] +
          "&txtArrCity1=" + request['destination_iata'] +
@@ -107,12 +74,12 @@ def search_results_content(request):
          "&ddlPaxINF=" + request['infants']
     )
 
-
-    print "request", request
-
     if not g.response.cookies.get("ASP.NET_SessionId", False):
         print "not auth"
         sys.exit(0)
+
+    print 'response body length=', len(g.response.body)
+    print 'response headers length=', g.response.headers
 
     loc = g.response.headers.get("Location")
     if not loc or loc.find("result=nothing") >= 0:
@@ -139,23 +106,6 @@ def search_results_content(request):
     _oc = re.search(pat, g.response.body).group(1)
 
     print _vs.strip(), _dc.strip(), _oc.strip()
-
-
-
-#    print loc
-#
-#    print {
-#        "scp": "updServer|timeControl",
-#        "Destination_airport": "bkk/", #request["destination_iata"].upper() + "/",
-#        "Destination_country": "TH/", #_dc,
-#        "Origin_airport":  "syd/", #request["origin_iata"].upper() + "/",
-#        "Origin_country": "AU", #_oc,
-#        "Departure_date": request["depart_date"] + "/",
-#        "__EVENTTARGET": "timeControl",
-#        "__EVENTARGUMENT": "",
-#        "__VIEWSTATE": _vs,
-#        "__ASYNCPOST": "true"
-#    }
 
     i=0
     status = False
@@ -192,10 +142,6 @@ def search_results_content(request):
     g.go("http://res.webjet.com/prices.aspx?page=flightprices&air=Air&id1=" + urllib.quote(id1, ''))
 
     print "Response Body Length: ", len(g.response.body)
-
-    #print "~~~~~~~~~~~~~~~~~~~~~~~~"
-    #print g.response.body
-    #print "~~~~~~~~~~~~~~~~~~~~~~~~"
 
     return g.response.body
 
@@ -238,9 +184,6 @@ def page_results(request, content):
             arrival_time = arrival_plus_day.group(1)
             arrival_date += datetime.timedelta(days = int(arrival_plus_day.group(2)))
 
-        print "arrival"
-        print arrival_date, arrival_time
-
         departure = ptime.get_full_date(str(request["depart_date"]), ff(2))
         arrival = ptime.get_full_date(arrival_date, arrival_time)
 
@@ -280,12 +223,7 @@ def page_results(request, content):
             "flights": flights
         }
 
-    print g.css_list('.result-list>li')
-
     results = map(parse_proposal, g.css_list('.result-list>li'))
-
-    print "parsing results"
-    print results
 
     return results
 
