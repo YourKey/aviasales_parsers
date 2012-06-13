@@ -61,6 +61,9 @@ class ProposalsHandler(BaseHandler):
             request[key] = self.get_argument(key)
 
         response, obj = boot.run_parse(hostname, request)
+
+        print obj
+
         if not response:
             # сервер не может запустить парсер
             return self.error_response(500, str(obj))

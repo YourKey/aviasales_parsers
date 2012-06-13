@@ -36,6 +36,9 @@ def search_results_content(request):
 
     request = request.copy()
 
+    print request["depart_date"]
+    print request["return_date"]
+
     request["depart_date"] = ptime.input2mdY(request["depart_date"])
     request["return_date"] = ptime.input2mdY(request["return_date"])
 
@@ -162,59 +165,74 @@ def page_results(request, content):
     # operation_airline = main airline, airline = airline
 
     def parse_flight(e, route_leg):
-        print "start parse flights..."
+        g0 = Grab()
+        g0.response.body = etree.tostring(e)
 
-        g = Grab()
-        g.response.body = etree.tostring(e)
+        results = []
+        offset_days = 0
+        for f0 in g0.xpath_list('./li'):
 
-        f = g.css_list('li>ul>li')
-        def ff(index):
-            return re.match(flight_field_pattern, etree.tostring(f[index])).group(1)
+            g = Grab()
+            g.response.body = etree.tostring(f0)
 
-        h = re.match(origin_destination_pattern, g.css_text('li>h5'))
-        def hh(index):
-            return h.group(index)
+            f = g.css_list('ul>li')
 
-        arrival_pattern_plus_day = re.compile('(\d+:\d+ [AP]M) \\+ (\d+) [dD]ay')
+            def ff(index):
+                return re.match(flight_field_pattern, etree.tostring(f[index])).group(1)
 
-        arrival_time = ff(3)
-        arrival_date = ptime.get_date(request["depart_date"])
-        arrival_plus_day = re.match(arrival_pattern_plus_day, arrival_time.strip())
-        if arrival_plus_day:
-            arrival_time = arrival_plus_day.group(1)
-            arrival_date += datetime.timedelta(days = int(arrival_plus_day.group(2)))
+            h = re.match(origin_destination_pattern, g.css_text('h5'))
+            def hh(index):
+                return h.group(index)
 
-        departure = ptime.get_full_date(str(request["depart_date"]), ff(2))
-        arrival = ptime.get_full_date(arrival_date, arrival_time)
+            arrival_pattern_plus_day = re.compile('(\d+:\d+ [AP]M) \\+ (\d+) [dD]ay')
 
-        def sep_number(s):
-            r = re.match(re.compile('([\w\d][\w\d])(\d+)'), str(s))
-            return r.group(1), r.group(2)
+            if route_leg:
+                base_date = request["return_date"]
+            else:
+                base_date = request["depart_date"]
 
-        airline, number = sep_number(ff(5))
+            departure = ptime.get_full_date(str(base_date), ff(2))
+            departure += datetime.timedelta(days = offset_days)
 
-        return {
-            "number":number,
-            "airline":airline, #ff(4),
-            "origin":hh(1),
-            "destination":hh(2),
-            "departure":ptime.response_date(departure),
-            "arrival":ptime.response_date(arrival),
-            "duration":None, #ptime.str_timedelta(departure, arrival),
-            "route_leg":int(route_leg),
-            "aircraft":None,
-            "__main_airline":airline, #ff(4)
-        }
+            arrival_time = ff(3)
+            arrival_date = ptime.get_date(base_date)
+            arrival_plus_day = re.match(arrival_pattern_plus_day, arrival_time.strip())
+            if arrival_plus_day:
+                offset_days += 1
+                arrival_time = arrival_plus_day.group(1)
+            arrival_date += datetime.timedelta(days = offset_days)
+            arrival = ptime.get_full_date(arrival_date, arrival_time)
+
+            def sep_number(s):
+                r = re.match(re.compile('([\w\d][\w\d])(\d+)'), str(s))
+                return r.group(1), r.group(2)
+
+            airline, number = sep_number(ff(5))
+
+            results.append({
+                "number":number,
+                "airline":airline, #ff(4),
+                "origin":hh(1),
+                "destination":hh(2),
+                "departure":ptime.response_date(departure),
+                "arrival":ptime.response_date(arrival),
+                "duration":None, #ptime.str_timedelta(departure, arrival),
+                "route_leg":str(int(route_leg)) ,
+                "aircraft":None,
+                "__main_airline":airline, #ff(4)
+            })
+
+        return results
 
     def parse_proposal(e):
         print "start parse proposals"
         g = Grab()
         g.response.body = etree.tostring(e)
         flights = []
-        first_item = True
+        departing = True
         for v in g.css_list('.info>.info>.clearfix'):
-            flights.append(parse_flight(v, first_item))
-            first_item = False
+            flights.extend(parse_flight(v, not departing))
+            departing = False
 
         return {
             "total":re.search(total_propasal_price,etree.tostring(g.css('#paxAdtTd').find('..'))).group(1),
@@ -224,7 +242,6 @@ def page_results(request, content):
         }
 
     results = map(parse_proposal, g.css_list('.result-list>li'))
-
     return results
 
 
