@@ -86,13 +86,11 @@ def click_xml_response(url_info):
     result+= '\n<http_method>{method}</http_method>'.replace('{method}', url_info['method'])
     result+= '\n<url>{url}</url>'.replace('{url}', url_info['url'])
     if len(url_info["params"]) > 0:
-        result+= '\n<request_params>'
+        result+= '\n<request_params'
         params = url_info["params"]
         for k in params:
-            result+= '<param name="{name}" value="{value}" />'
-            result = result.replace('{name}', k)
-            result = result.replace('{value}', params[k])
-        result+= '\n</request_params>'
+            result+= ' ' + str(k) + '="' + params[k] + '"'
+        result+= ' />'
     result+= '\n</click>'
 
     return result
