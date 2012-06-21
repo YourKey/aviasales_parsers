@@ -58,11 +58,9 @@ class ProposalsHandler(BaseHandler):
         }
 
         for key in request.keys():
-            request[key] = self.get_argument(key)
+            request[key] = self.get_argument(key, None) if key in ['return_date'] else self.get_argument(key)
 
         response, obj = boot.run_parse(hostname, request)
-
-        print obj
 
         if not response:
             # сервер не может запустить парсер

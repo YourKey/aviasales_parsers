@@ -36,8 +36,11 @@ def search_results_content(request):
 
     request = request.copy()
 
-    print request["depart_date"]
-    print request["return_date"]
+    one_way = False
+
+    if not request.get("return_date", False):
+        one_way = True
+        request["return_date"] = request["depart_date"]
 
     request["depart_date"] = ptime.input2mdY(request["depart_date"])
     request["return_date"] = ptime.input2mdY(request["return_date"])
@@ -45,7 +48,7 @@ def search_results_content(request):
     g.setup(post = {
         'EntryPoint':	'Flight',
         'RequestFrom':	'Outside',
-        'TripType':	'rdbRoundTrip',
+        'TripType': 'rdbOneWay' if one_way else 'rdbRoundTrip',
         'WebSiteId':	'189',
         'arrival_label':	request['destination_iata'],
         'btnSubmitAir':	'Search for flights',
@@ -63,11 +66,12 @@ def search_results_content(request):
         'txtdate2': request["return_date"]
     })
 
+    print 'request post data'
     g.setup(user_agent = "Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
     g.go("http://res.webjet.com/process.aspx?agentid=189&" +
          "txtDepCity1=" + request['origin_iata'] +
          "&txtArrCity1=" + request['destination_iata'] +
-         "&TripType=rdbRoundTrip" +
+         "&TripType=" + ("rdbOneWay" if one_way else "rdbRoundTrip") +
          "&txtDate1=" + request["depart_date"] +
          "&txtDate2=" + request["return_date"] +
          "&txtDepCity2=" + request['destination_iata'] +
@@ -77,6 +81,7 @@ def search_results_content(request):
          "&ddlPaxINF=" + request['infants']
     )
 
+    print 'check cookie'
     if not g.response.cookies.get("ASP.NET_SessionId", False):
         print "not auth"
         sys.exit(0)
@@ -84,6 +89,7 @@ def search_results_content(request):
     print 'response body length=', len(g.response.body)
     print 'response headers length=', g.response.headers
 
+    print 'check location'
     loc = g.response.headers.get("Location")
     if not loc or loc.find("result=nothing") >= 0:
         print "not results"
@@ -113,6 +119,8 @@ def search_results_content(request):
     i=0
     status = False
 
+    print 'waiting...'
+
     while True:
         g.setup(post= {
             "scp": "updServer|timeControl",
@@ -138,9 +146,11 @@ def search_results_content(request):
         time.sleep(1)
         i += 1
 
+    print 'check status'
     if not status:
         return False
 
+    print 'prices request'
     g.setup(user_agent="User-Agent	Mozilla/5.0 (Ubuntu; X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0")
     g.go("http://res.webjet.com/prices.aspx?page=flightprices&air=Air&id1=" + urllib.quote(id1, ''))
 
@@ -224,26 +234,42 @@ def page_results(request, content):
 
         return results
 
+
+
     def parse_proposal(e):
-        print "start parse proposals"
-        g = Grab()
-        g.response.body = etree.tostring(e)
-        flights = []
-        departing = True
-        for v in g.css_list('.info>.info>.clearfix'):
-            flights.extend(parse_flight(v, not departing))
-            departing = False
+        try:
+            global proposal_count
+            print "start parse proposals #" + str(proposal_count)
+            proposal_count += 1
+            g = Grab()
+            g.response.body = etree.tostring(e)
+            flights = []
+            departing = True
+            for v in g.css_list('.info>.info>.clearfix'):
+                flight = parse_flight(v, not departing)
+                flights.extend(flight)
+                departing = False
 
-        return {
-            "total":re.search(total_propasal_price,etree.tostring(g.css('#paxAdtTd').find('..'))).group(1),
-            "currency":"AUD",
-            "main_airline":None if not flights else flights[0]["__main_airline"],
-            "flights": flights
-        }
+            print flights
+            return {
+                "total":re.search(total_propasal_price,etree.tostring(g.css('#paxAdtTd').find('..'))).group(1),
+                "currency":"AUD",
+                "main_airline":None if not flights else flights[0]["__main_airline"],
+                "flights": flights
+            }
+        except Exception:
+            return None
 
-    results = map(parse_proposal, g.css_list('.result-list>li'))
+    list = g.css_list('.result-list>li')
+    results = []
+    for e in list:
+        proposal = parse_proposal(e)
+        if proposal:
+            results.append(proposal)
+
     return results
 
+proposal_count = 0
 
 def main():
 
