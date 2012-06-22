@@ -4,6 +4,7 @@
 import sys, os, logging, traceback
 from multiprocessing import Process, Queue
 from _importlib import import_module
+import urllib
 
 ##############################################
 # Функии логирования
@@ -90,7 +91,7 @@ def click_xml_response(url_info):
         for k in params:
             result+= '\n<request_params name="{name}" value="{value}" />'
             result = result.replace('{name}', k)
-            result = result.replace('{value}', params[k])
+            result = result.replace('{value}', urllib.unquote(params[k]))
     result+= '\n</click>'
 
     return result
